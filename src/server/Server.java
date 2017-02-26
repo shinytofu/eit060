@@ -29,7 +29,6 @@ public class Server implements Runnable {
             System.out.println("issuer: " + cert.getIssuerDN().getName());
             System.out.println("serialno: " + cert.getSerialNumber().toString());
             System.out.println(numConnectedClients + " concurrent connection(s)\n");
-
             PrintWriter out = null;
             BufferedReader in = null;
             out = new PrintWriter(socket.getOutputStream(), true);

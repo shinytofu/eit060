@@ -46,7 +46,12 @@ public class Client {
 				KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
 				TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
 				SSLContext ctx = SSLContext.getInstance("TLS");
-				ks.load(new FileInputStream("clientkeystore"), password); // keystore
+				BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
+				System.out.println("Specify a keystore ...");
+				String keystore = read.readLine();
+				System.out.println("Enter password for keystore ...");
+				String pw = read.readLine();
+				ks.load(new FileInputStream(keystore), pw.toCharArray()); // keystore
 																			// password
 																			// (storepass)
 				ts.load(new FileInputStream("clienttruststore"), password); // truststore
@@ -79,7 +84,6 @@ public class Client {
 			System.out.println("serialno: " + cert.getSerialNumber().toString());
 			System.out.println("socket after handshake:\n" + socket + "\n");
 			System.out.println("secure connection established\n\n");
-
 			BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
