@@ -11,7 +11,7 @@ public class Database {
 		}
 	}
 	
-	private User search(String name){
+	public User search(String name){
 		User u = new Patient("temp", name);
 		int index = users.lastIndexOf(u);
 		if (index == -1) {
@@ -21,20 +21,20 @@ public class Database {
 		}		
 	}
 	
-	public Patient find(String name){
-		User u = new Patient("temp", name);
-		int index = users.lastIndexOf(u);
-		if (index == -1) {
-			return null;
-		} else {
-			u = users.get(index);
-			if (u.type == 0){
-				return (Patient) u;
-			} else {
-				return null;
-			}
-		}		
-	}
+//	public Patient find(String name){
+//		User u = new Patient("temp", name);
+//		int index = users.lastIndexOf(u);
+//		if (index == -1) {
+//			return null;
+//		} else {
+//			u = users.get(index);
+//			if (u.type == 0){
+//				return (Patient) u;
+//			} else {
+//				return null;
+//			}
+//		}		
+//	}
 	
 	public User authenticate(String name, String password){
 		User u = search(name);
