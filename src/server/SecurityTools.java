@@ -11,12 +11,22 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class SecurityTools {
 	
-	public static byte[] getPasswordHash(String password) throws InvalidKeySpecException, NoSuchAlgorithmException{
-		final Random r = new SecureRandom();
-		byte[] salt = new byte[16];
-		r.nextBytes(salt);
+	public static byte[] getPasswordHash(String password, byte[] salt) throws InvalidKeySpecException, NoSuchAlgorithmException{
+		if (salt == null){
+			final Random r = new SecureRandom();
+			salt = new byte[16];
+			r.nextBytes(salt);
+		}
 		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256);
 		SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-		return f.generateSecret(spec).getEncoded();
+		byte[] encoded = f.generateSecret(spec).getEncoded();
+		byte[] toReturn = new byte[encoded.length+16];
+		for(int i = 0; i<16; i++){
+			toReturn[i] = salt[i];
+		}
+		for (int i=16; i<encoded.length+16;i++){
+			toReturn[i] = encoded[i-16];
+		}
+		return toReturn;
 	}
 }

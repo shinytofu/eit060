@@ -2,6 +2,7 @@ package server;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 public abstract class User {
 	public final int type;
@@ -12,7 +13,7 @@ public abstract class User {
 		this.type = type;
 		this.name = name;
 		try {
-			this.password = SecurityTools.getPasswordHash(password);
+			this.password = SecurityTools.getPasswordHash(password, null);
 		} catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -20,14 +21,9 @@ public abstract class User {
 	
 	public boolean loginAttempt(String password){
 		try {
-			byte [] attempt = SecurityTools.getPasswordHash(password);
-			boolean equal = true;
-			int index = 0;
-			while (equal && index < attempt.length){
-				equal = this.password[index] == attempt[index];
-				index ++;
-			}
-			return equal;
+			byte[] salt = Arrays.copyOf(this.password, 16);
+			byte [] attempt = SecurityTools.getPasswordHash(password, salt);
+			return Arrays.equals(this.password, attempt);
 		} catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
