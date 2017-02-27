@@ -88,18 +88,33 @@ public class Client {
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String msg;
+			
+			//password implementation
+			System.out.println("Enter password:");
+			msg = read.readLine();
+			out.println(msg);
+			out.flush();
+			System.out.println(in.readLine()); //auth message
+			char[] inData;
 			for (;;) {
+				inData = new char[10000];
 				System.out.print(">");
 				msg = read.readLine();
 				if (msg.equalsIgnoreCase("quit")) {
 					break;
 				}
-				System.out.print("sending '" + msg + "' to server...");
+				//System.out.print("sending '" + msg + "' to server...");
 				out.println(msg);
 				out.flush();
-				System.out.println("done");
+				//System.out.println("done");
 
-				System.out.println("received '" + in.readLine() + "' from server\n");
+				//System.out.println("received '" + in.readLine() + "' from server\n");
+				int length = in.read(inData);
+				String toPrint = "";
+				for (int i = 0; i<length ; i++){
+					toPrint += Character.toString(inData[i]);
+				}
+				System.out.println(toPrint);
 			}
 			in.close();
 			out.close();
