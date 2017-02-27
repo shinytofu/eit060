@@ -79,7 +79,7 @@ public class CommandHandler {
 
 	private boolean check(String[] commands) {
 		if (commands[0].equals("createRecord") && commands.length == 7 && commands[1].equals("-patient")
-				&& commands[3].equals("-record") && commands[5].equals("-info")) {
+				&& commands[3].equals("-nurse") && commands[5].equals("-division")) {
 			return true;
 		}
 		if (commands[0].equals("append") && commands.length >= 7 && commands[1].equals("-patient")
