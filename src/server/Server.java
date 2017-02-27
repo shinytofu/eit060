@@ -10,10 +10,41 @@ import javax.security.cert.X509Certificate;
 public class Server implements Runnable {
     private ServerSocket serverSocket = null;
     private static int numConnectedClients = 0;
+    private Database database;
 
     public Server(ServerSocket ss) throws IOException {
         serverSocket = ss;
         newListener();
+        
+        //init database
+        Doctor master = new Doctor("master", "master", "master");
+        Nurse maester = new Nurse("master", "master", "master");
+        User[] users = new User[6];
+        users[0] = new Gov("gov", "Gov");
+        users[1] = new Doctor("smith", "JohnSmith", "Division1");
+        users[2] = new Nurse("duck", "DonaldDuck", "Division1");
+        
+        Patient one = new Patient("white", "AnnaWhite");
+        master.addPatient(one);
+        one.createRecord(master, maester, "Division2");
+        one.createRecord(master, maester, "Division1");
+        one.createRecord(master, maester, "Division1");
+        users[3] = one;
+        
+        Patient two = new Patient("black", "JasonBlack");
+        master.addPatient(two);
+        ((Doctor)users[1]).addPatient(two);      
+        two.createRecord((Doctor)users[1], maester, "Division2");
+        two.createRecord((Doctor)users[1], maester, "Division1");
+        two.createRecord(master, (Nurse)users[2], "Division1");
+        users[4] = two;
+        
+        Patient three = new Patient("green", "BrunoGreen");
+        master.addPatient(three);
+        three.createRecord(master, (Nurse)users[2], "Division2");
+        users[5] = three;
+        
+        database = new Database(users);
     }
 
     public void run() {
@@ -33,16 +64,27 @@ public class Server implements Runnable {
             BufferedReader in = null;
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            String clientMsg = null;
-            while ((clientMsg = in.readLine()) != null) {
-			    String rev = new StringBuilder(clientMsg).reverse().toString();
-                System.out.println("received '" + clientMsg + "' from client");
-                System.out.print("sending '" + rev + "' to client...");
-				out.println(rev);
-				out.flush();
-                System.out.println("done\n");
-			}
+            String clientMsg = null;        
+            
+            //password implementation
+            String[] CNAndName = subject.split("=");
+            User currentUser = database.authenticate(CNAndName[1], in.readLine());
+            
+            if (currentUser != null) {
+            	out.println("Authenticated");
+            	out.flush();
+            	CommandHandler cmd = new CommandHandler(currentUser, database);
+                while ((clientMsg = in.readLine()) != null) {
+    			    String reply = cmd.handle(clientMsg);
+//                    System.out.println("received '" + clientMsg + "' from client");
+//                    System.out.print("sending '" + rev + "' to client...");
+    				out.println(reply);
+    				out.flush();
+    			}
+            } else {
+            	out.println("Bad Credentials. Closing connection ..");
+            	out.flush();
+            }
 			in.close();
 			out.close();
 			socket.close();

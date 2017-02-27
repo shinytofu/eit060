@@ -6,7 +6,7 @@ public class Doctor extends User {
 	private String division;
 	private ArrayList<Patient> patients;
 
-	public Doctor(String password, String division, String name) {
+	public Doctor(String password, String name, String division) {
 		super(1, password, name);
 		this.division = division;
 		patients = new ArrayList<Patient>();

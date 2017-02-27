@@ -6,6 +6,7 @@ public class Database {
 	private ArrayList<User> users;
 	
 	public Database(User[] users){
+		this.users = new ArrayList<User>();
 		for(User u:users){
 			this.users.add(u);
 		}

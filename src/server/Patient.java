@@ -10,22 +10,27 @@ public class Patient extends User {
 		recordList = new ArrayList<Record>();
 	}
 
-	public boolean createRecord(Doctor callee, Nurse nurse, String division) {
-		if (callee.isTreating(this)) {
-			recordList.add(new Record(callee, nurse, division));
-			return true;
-		}
+	public boolean createRecord(User callee, Nurse nurse, String division) {
+		if (callee.type == 1){
+			if (((Doctor)callee).isTreating(this)) {
+				recordList.add(new Record((Doctor)callee, nurse, division));
+				return true;
+			}
+		}	
 		return false;
 	}
 
-	public boolean appendToRecord(User callee, int index, String append) {
+	public int appendToRecord(User callee, int index, String append) {
+		if (index > recordList.size()) {
+			return -1;
+		}
 		Record r = recordList.get(index - 1); // -1 because the list starts at 1
 												// and not 0
 		if (r.canWrite(callee)) {
 			r.append(append);
-			return true;
+			return 1;
 		}
-		return false;
+		return 0;
 	}
 
 	public String[] listRecords(User callee) {
@@ -33,7 +38,7 @@ public class Patient extends User {
 		int index = 1;
 		for (Record r : recordList) {
 			if (callee.equals(this) || r.canRead(callee))
-				strings.add(index + ":/n" + r.toString()); // I am aware that
+				strings.add(index + ":\n" + r.toString()); // I am aware that
 															// information about
 															// number of records
 															// might leak to
@@ -46,11 +51,14 @@ public class Patient extends User {
 		return strings.toArray(toReturn);
 	}
 	
-	public boolean removeRecord(User callee, int index){
+	public int deleteRecord(User callee, int index){
+		if (index > recordList.size()) {
+			return -1;
+		}
 		if (callee.type == 3){
 			recordList.remove(index);
-			return true;
+			return 1;
 		}
-		return false;
+		return 0;
 	}
 }
