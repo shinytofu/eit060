@@ -1,6 +1,8 @@
 package server;
 
-public class Record {
+import java.io.Serializable;
+
+public class Record implements Serializable {
 	private Doctor doctor;
 	private Nurse nurse;
 	private String division;

@@ -1,10 +1,11 @@
 package server;
 
+import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
-public abstract class User {
+public abstract class User implements Serializable {
 	public final int type;
 	private byte[] password;
 	private String name;
