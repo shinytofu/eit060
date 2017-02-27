@@ -23,7 +23,7 @@ public class CommandHandler {
 				if (nurse == null || nurse.type != 2){
 					return "No such nurse";
 				}
-				if (patient.createRecord((Doctor)currentUser, (Nurse)nurse, commands[6])) {
+				if (patient.createRecord(currentUser, (Nurse)nurse, commands[6])) {
 					return "Record created";
 				} else {
 					return "Access not granted";

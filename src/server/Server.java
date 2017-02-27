@@ -41,7 +41,7 @@ public class Server implements Runnable {
         
         Patient three = new Patient("green", "BrunoGreen");
         master.addPatient(three);
-        ((Doctor)users[1]).addPatient(three);
+        ((Doctor)users[1]).addPatient(three); 
         three.createRecord(master, (Nurse)users[2], "Division2");
         users[5] = three;
         
