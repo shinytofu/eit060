@@ -57,7 +57,9 @@ public class Client {
 				ts.load(new FileInputStream("clienttruststore"), password); // truststore
 																			// password
 																			// (storepass);
-				kmf.init(ks, password); // user password (keypass)
+				System.out.println("Enter password for key ...");
+				pw = read.readLine();
+				kmf.init(ks, pw.toCharArray()); // user password (keypass)
 				tmf.init(ts); // keystore can be used as truststore here
 				ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 				factory = ctx.getSocketFactory();
