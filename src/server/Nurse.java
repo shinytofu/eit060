@@ -1,7 +1,5 @@
 package server;
 
-import java.io.Serializable;
-
 public class Nurse extends User {
 	private String division;
 
