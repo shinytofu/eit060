@@ -3,13 +3,16 @@ package server;
 public class CommandHandler {
 	private User currentUser;
 	private Database database;
+	private Logger logger;
 
-	public CommandHandler(User currentUser, Database database) {
+	public CommandHandler(User currentUser, Database database, Logger logger) {
 		this.currentUser = currentUser;
 		this.database = database;
+		this.logger = logger;
 	}
 
 	public String handle(String clientMsg) {
+		logger.append(currentUser.toString() + "> " + clientMsg);
 		String[] commands = clientMsg.split(" ");
 		if (check(commands)) {
 			User user = database.search(commands[2]);

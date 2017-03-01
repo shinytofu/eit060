@@ -11,6 +11,7 @@ public class Server implements Runnable {
 	private ServerSocket serverSocket = null;
 	private static int numConnectedClients = 0;
 	private Database database;
+	private Logger logger;
 
 	public Server(ServerSocket ss) throws IOException {
 		serverSocket = ss;
@@ -46,6 +47,8 @@ public class Server implements Runnable {
 		three.createRecord(master, (Nurse) users[2], "Division2");
 		users[5] = three;*/
 
+		
+		logger = new Logger();
 		database = new Database(null);
 		//database.save();
 		database.load();
@@ -76,8 +79,9 @@ public class Server implements Runnable {
 
 			if (currentUser != null) {
 				out.println("Authenticated");
+				logger.append(currentUser.toString() + " was successfully authenticated");
 				out.flush();
-				CommandHandler cmd = new CommandHandler(currentUser, database);
+				CommandHandler cmd = new CommandHandler(currentUser, database, logger);
 				while ((clientMsg = in.readLine()) != null) {
 					String reply = cmd.handle(clientMsg);
 					// System.out.println("received '" + clientMsg + "' from client");
@@ -86,6 +90,7 @@ public class Server implements Runnable {
 					out.flush();
 				}
 			} else {
+				logger.append("Failed Authentication: " + subject);
 				out.println("Bad Credentials. Closing connection ..");
 				out.flush();
 			}
